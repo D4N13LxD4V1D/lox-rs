@@ -6,10 +6,14 @@ use std::io::Write;
 pub mod error_handling;
 pub mod scanner;
 pub mod token;
+pub mod ast;
+pub mod expression;
 
 fn run(source: &str) {
     let tokens = scanner::scan(source);
-    println!("{:#?}", &tokens);
+    let expr = ast::parse(tokens);
+
+    println!("{:#?}", expr);
 }
 
 fn run_file(args: Vec<String>) {
