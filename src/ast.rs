@@ -1,9 +1,35 @@
+use std::io::{self, Write};
+
 use crate::expression::Expression;
 use crate::token::{TokenType::{*, self}, Token};
 use crate::error_handling;
 struct State {
     tokens: Vec<Token>,
     current: usize,
+}
+
+pub fn print(expr: Expression) {
+    match expr {
+        Expression::Binary(left, op, right) => {
+            print!("\x1b[1;34m( \x1b[0m{} ", op.lexeme); io::stdout().flush().unwrap();
+            print(*left); io::stdout().flush().unwrap();
+            print(*right); io::stdout().flush().unwrap();
+            print!("\x1b[1;34m)\x1b[0m "); io::stdout().flush().unwrap();
+        },
+        Expression::Grouping(expr) => {
+            print!(" \x1b[1;35m( \x1b[0m"); io::stdout().flush().unwrap();
+            print(*expr); io::stdout().flush().unwrap();
+            print!("\x1b[1;35m)\x1b[0m "); io::stdout().flush().unwrap();
+        },
+        Expression::Literal(value) => {
+            print!("{} ", value.lexeme); io::stdout().flush().unwrap();
+        },
+        Expression::Unary(op, expr) => {
+            print!(" \x1b[1;33m( \x1b[0m{} ", op.lexeme); io::stdout().flush().unwrap();
+            print(*expr); io::stdout().flush().unwrap();
+            print!("\x1b[1;33m)\x1b[0m "); io::stdout().flush().unwrap();
+        }
+    }
 }
 
 pub fn parse(tokens: Vec<Token>) -> Expression {
@@ -108,7 +134,7 @@ fn primary(state: &mut State) -> Expression {
         return Expression::Grouping(Box::new(expr));
     }
     let token = &state.tokens[state.current];
-    error_handling::error(token.line, token.index, "Expect expression");
+    error_handling::error(token.line, token.index, "expected expression");
     Expression::Literal(Token::new(NIL, "".to_string(), vec![], token.line, token.index))
 }
 

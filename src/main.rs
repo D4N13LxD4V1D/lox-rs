@@ -13,7 +13,8 @@ fn run(source: &str) {
     let tokens = scanner::scan(source);
     let expr = ast::parse(tokens);
 
-    println!("{:#?}", expr);
+    ast::print(expr);
+    println!();
 }
 
 fn run_file(args: Vec<String>) {
