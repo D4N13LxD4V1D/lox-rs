@@ -77,6 +77,7 @@ pub fn scan(source: &str) -> Vec<Token> {
                 word_index += 1;
             },
             '\n' => {
+                tokens.push(Token::new(TokenType::SEMICOLON, " ".to_string(), literal, line, word_index));
                 line += 1;
                 word_index = 0;
             },
@@ -133,7 +134,7 @@ pub fn scan(source: &str) -> Vec<Token> {
                     _ => tokens.push(Token::new(TokenType::IDENTIFIER, literal.iter().collect::<String>(), literal, line, word_index)),
                 }
             },
-            _ => error(line, word_index, "Unexpected token"),
+            _ => error(line, word_index, &("unexpected token '".to_owned() + &source[i].to_string() + "'")),
         }
         i += 1;
     }
