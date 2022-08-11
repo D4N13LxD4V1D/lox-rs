@@ -24,22 +24,6 @@ struct State {
     current: usize,
 }
 
-pub fn print(statements: &Vec<Statement>) {
-    for stmt in statements {
-        match stmt {
-            Statement::Print(e) => {
-                _print(&Expression::Unary(Token::new(PRINT, "print".to_string(), vec!['p', 'r', 'i', 'n', 't'], 0, 1), Box::from(e.clone())));
-            },
-            Statement::Expression(e) => {
-                _print(e);
-            },
-            Statement::Var(t, e) => {
-                _print(&Expression::Binary(Box::from(Expression::Variable(t.clone())), Token::new(VAR, "=".to_string(), vec!['='], 0, 1), Box::from(e.clone())));
-            }
-        }
-    }
-}
-
 fn _print(expr: &Expression) {
     match expr {
         Expression::Binary(left, op, right) => {
@@ -97,7 +81,7 @@ fn var_declaration(state: &mut State) -> Statement {
     if _match(state, vec![EQUAL]) {
         initializer = expression(state);
     } else {
-        initializer = Expression::Literal(Token::new(NIL, "nil".to_string(), vec!['n', 'i', 'l'], 0, 1));
+        initializer = Expression::Literal(Token::new(NIL, "null".to_string(), vec!['n', 'i', 'l'], 0, 1));
     }
     consume(state, SEMICOLON, ";");
     Statement::Var(name, initializer)
@@ -112,13 +96,13 @@ fn statement(state: &mut State) -> Statement {
 
 fn print_stmt(state: &mut State) -> Statement {
     let value = expression(state);
-    consume(state, SEMICOLON, ";");
+    consume(state, SEMICOLON, "a semicolon or a line break");
     Statement::Print(value)
 }
 
 fn expr_stmt(state: &mut State) -> Statement {
     let expr = expression(state);
-    consume(state, SEMICOLON, ";");
+    consume(state, SEMICOLON, "a semicolon or a line break");
     Statement::Expression(expr)
 }
 
