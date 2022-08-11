@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "hello_world"
+name = "intrprtr-rs"
 version = "0.1.0"
