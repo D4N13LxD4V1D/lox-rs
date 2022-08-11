@@ -2,29 +2,6 @@ use crate::{token::{TokenType}, error_handling::error};
 use crate::ast::{Expression, Statement};
 use crate::environment::{Environment, Value};
 
-impl Value {
-    pub fn unwrap_num(self: &Self) -> f64 {
-        match self {
-            Value::Number(n) => *n,
-            _ => {error(0, 0, "expected number"); f64::NAN}
-        }
-    }
-
-    pub fn unwrap_str(self: &Self) -> String {
-        match self {
-            Value::String(n) => n.clone(),
-            _ => {error(0, 0, "expected string"); "".to_string()}
-        }
-    }
-
-    pub fn unwrap_bool(self: &Self) -> bool{
-        match self {
-            Value::Boolean(n) => *n,
-            _ => {error(0, 0, "expected boolean"); bool::default()}
-        }
-    }
-}
-
 fn print(expr: &Expression, env: &Environment) {
     match evaluate(expr, env) {
         Value::Number(n) => println!("{}", n),
@@ -86,6 +63,7 @@ pub fn evaluate(expr: &Expression, env: &Environment) -> Value {
                 TokenType::NUMBER => Value::Number(value.lexeme.parse::<f64>().unwrap()),
                 TokenType::TRUE => Value::Boolean(true),
                 TokenType::FALSE => Value::Boolean(false),
+                TokenType::NIL => Value::Null,
                 _ => {error(value.line, value.index, "invalid literal"); Value::Null},
             }
         },
