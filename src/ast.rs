@@ -1,28 +1,9 @@
 use std::io::{self, Write};
 
-use crate::token::{TokenType::{*, self}, Token};
+use crate::{token::{TokenType::{*, self}, Token}, environment::*};
 use crate::error_handling;
 
-#[derive(Debug, Clone)]
-pub enum Expression {
-    Literal(Token),
-    Unary(Token, Box<Expression>),
-    Binary(Box<Expression>, Token, Box<Expression>),
-    Grouping(Box<Expression>),
-    Variable(Token)
-}
 
-#[derive(Debug, Clone)]
-pub enum Statement {
-    Expression(Expression),
-    Print(Expression),
-    Var(Token, Expression)
-}
-
-struct State {
-    tokens: Vec<Token>,
-    current: usize,
-}
 
 fn _print(expr: &Expression) {
     match expr {

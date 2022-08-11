@@ -1,7 +1,26 @@
 use std::collections::HashMap;
 
 use crate::{token::Token, error_handling::error};
+#[derive(Debug, Clone)]
+pub enum Expression {
+    Literal(Token),
+    Unary(Token, Box<Expression>),
+    Binary(Box<Expression>, Token, Box<Expression>),
+    Grouping(Box<Expression>),
+    Variable(Token)
+}
 
+#[derive(Debug, Clone)]
+pub enum Statement {
+    Expression(Expression),
+    Print(Expression),
+    Var(Token, Expression)
+}
+
+pub struct State {
+    pub tokens: Vec<Token>,
+    pub current: usize,
+}
 #[derive(Debug, Clone)]
 pub enum Value {
     Number(f64),
