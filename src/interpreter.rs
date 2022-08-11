@@ -1,6 +1,5 @@
 use crate::{token::{TokenType}, error_handling::error};
-use crate::ast::{Expression, Statement};
-use crate::environment::{Environment, Value};
+use crate::environment::*;
 
 fn print(expr: &Expression, env: &Environment) {
     match evaluate(expr, env) {
