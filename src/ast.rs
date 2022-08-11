@@ -8,17 +8,17 @@ struct State {
     current: usize,
 }
 
-pub fn print(expr: Expression) {
+pub fn print(expr: &Expression) {
     match expr {
         Expression::Binary(left, op, right) => {
             print!("\x1b[1;34m( \x1b[0m{} ", op.lexeme); io::stdout().flush().unwrap();
-            print(*left); io::stdout().flush().unwrap();
-            print(*right); io::stdout().flush().unwrap();
+            print(&*left); io::stdout().flush().unwrap();
+            print(&*right); io::stdout().flush().unwrap();
             print!("\x1b[1;34m)\x1b[0m "); io::stdout().flush().unwrap();
         },
         Expression::Grouping(expr) => {
             print!(" \x1b[1;35m( \x1b[0m"); io::stdout().flush().unwrap();
-            print(*expr); io::stdout().flush().unwrap();
+            print(&*expr); io::stdout().flush().unwrap();
             print!("\x1b[1;35m)\x1b[0m "); io::stdout().flush().unwrap();
         },
         Expression::Literal(value) => {
@@ -26,7 +26,7 @@ pub fn print(expr: Expression) {
         },
         Expression::Unary(op, expr) => {
             print!(" \x1b[1;33m( \x1b[0m{} ", op.lexeme); io::stdout().flush().unwrap();
-            print(*expr); io::stdout().flush().unwrap();
+            print(&*expr); io::stdout().flush().unwrap();
             print!("\x1b[1;33m)\x1b[0m "); io::stdout().flush().unwrap();
         }
     }
