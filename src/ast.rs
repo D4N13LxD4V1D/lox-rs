@@ -104,7 +104,7 @@ fn primary(state: &mut State) -> Expression {
     
     if _match(state, vec![LEFT_PAREN]) {
         let expr = expression(state);
-        consume(state, RIGHT_PAREN, "Expect ')' after expression.");
+        consume(state, RIGHT_PAREN, ')');
         return Expression::Grouping(Box::new(expr));
     }
     let token = &state.tokens[state.current];
@@ -112,12 +112,12 @@ fn primary(state: &mut State) -> Expression {
     Expression::Literal(Token::new(NIL, "".to_string(), vec![], token.line, token.index))
 }
 
-fn consume(state: &mut State, token_type: TokenType, message: &str) -> Token {
+fn consume(state: &mut State, token_type: TokenType, literal: char) -> Token {
     if check(state, token_type) {
         advance(state)
     } else {
         let token = &state.tokens[state.current];
-        error_handling::error(token.line, token.index, "Syntax error");
+        error_handling::error(token.line, token.index, &("expecting '".to_owned() + &literal.to_string() + "'"));
         advance(state)
     }
 }
