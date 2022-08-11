@@ -3,36 +3,37 @@ use std::env;
 use std::fs;
 use std::io::Write;
 
-pub mod error_handling;
-pub mod scanner;
-pub mod token;
-pub mod ast;
-pub mod expression;
-pub mod interpreter;
+mod error_handling;
+mod scanner;
+mod token;
+mod ast;
+mod interpreter;
+mod environment;
 
-fn run(source: &str) {
+fn run(source: &str, env: &mut environment::Environment) {
     let tokens = scanner::scan(source);
-    let expr = ast::parse(tokens);
+    let stmts = ast::parse(tokens);
 
-    ast::print(&expr);
-    println!();
-    interpreter::print(&expr);
+    //ast::print(&stmts);
+    //println!();
+    interpreter::execute(&stmts, env);
 }
 
 fn run_file(args: Vec<String>) {
     let contents = fs::read_to_string(&args[1]).expect("Something went wrong reading the file");
     for line in contents.split_terminator('\n') {
-        run(&line);
+        run(&line, &mut environment::Environment::new());
     }
 }
 
 fn run_prompt() {
+    let mut env = environment::Environment::new();
     loop {
         let mut input = String::new();
         print!("\x1b[1;37m>>> \x1b[0m");
         std::io::stdout().flush().unwrap();
         std::io::stdin().read_line(&mut input).unwrap();
-        run(&input);
+        run(&input, &mut env);
     }
 }
 
