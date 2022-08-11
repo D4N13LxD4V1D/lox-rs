@@ -8,13 +8,15 @@ pub mod scanner;
 pub mod token;
 pub mod ast;
 pub mod expression;
+pub mod interpreter;
 
 fn run(source: &str) {
     let tokens = scanner::scan(source);
     let expr = ast::parse(tokens);
 
-    ast::print(expr);
+    ast::print(&expr);
     println!();
+    interpreter::print(&expr);
 }
 
 fn run_file(args: Vec<String>) {
